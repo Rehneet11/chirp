@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: Chirp
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: chirp
+      auto-index-creation: true
+
