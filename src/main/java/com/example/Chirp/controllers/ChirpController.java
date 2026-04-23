@@ -2,6 +2,7 @@ package com.example.Chirp.controllers;
 
 import com.example.Chirp.dto.ChirpRequestDTO;
 import com.example.Chirp.dto.ChirpResponseDTO;
+import com.example.Chirp.models.ChirpElasticDocument;
 import com.example.Chirp.services.IChirpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,11 @@ public class ChirpController {
     }
 
     @GetMapping("")
-    public Flux<ChirpResponseDTO> getAllChirps(){
-        return chirpService.getAllChirps()
+    public Flux<ChirpResponseDTO> getAllChirps(
+            @RequestParam(required = false) String cursor,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return chirpService.getAllChirps(cursor,size)
                 .doOnError(error -> System.out.println("Error doing chirp: " + error));
     }
 
@@ -55,6 +59,12 @@ public class ChirpController {
 
     }
 
+    @GetMapping("/elasticsearch")
+    public Flux<ChirpElasticDocument> searchChirpsByElasticSearch(@RequestParam String keywords){
+        return chirpService.searchChirpsByElasticSearch(keywords);
+    }
+
+
     @GetMapping("/tag/{tagId}")
     public Flux<ChirpResponseDTO> getChirpsByTag(
             @PathVariable String tagId,
@@ -62,5 +72,26 @@ public class ChirpController {
             @RequestParam(defaultValue = "10") int size){
         return chirpService.getChirpsByTag(tagId, page, size)
                 .doOnError(error -> System.out.println("Chirp doesn't Exist"+ error));
+    }
+
+    @PatchMapping("/likes/{id}")
+    public Mono<Void> likeChirpById(@PathVariable String id){
+        return chirpService.likeChirpById(id)
+                .doOnSuccess(response -> System.out.println("Chirping Liked Successfully: " + response))
+                .doOnError(error -> System.out.println("Error Liking chirp: " + error));
+    }
+
+    @PostMapping("/rechirp/{id}")
+    public Mono<ChirpResponseDTO> rechirpAChirpById(@PathVariable String id){
+        return chirpService.rechirpAChirpById(id)
+                .doOnSuccess(response -> System.out.println("Rechirped Successfully: " + response))
+                .doOnError(error -> System.out.println("Error During Rechirping : " + error));
+    }
+
+    @PostMapping("/reply")
+    public Mono<ChirpResponseDTO> replyToAChirp(@RequestBody ChirpRequestDTO chirpRequestDTO){
+        return chirpService.replyToAChirp(chirpRequestDTO)
+                .doOnSuccess(response-> System.out.println("Replied to Chirp Successfully " + response))
+                .doOnError(error -> System.out.println("Error Replying to a Chirp " + error));
     }
 }

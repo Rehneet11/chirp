@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -27,9 +28,24 @@ public class Chirp {
     @Size(min=10,max=1000,message = "Chirp Longer Buddy")
     private String content;
 
+    @Indexed
     private String parentChirpId;
 
     private String chirperId;
+
+    private int likes;
+
+    private int replies;
+
+    private int views;
+
+    private String rechirpedChirpId;
+
+    private int trendingScore;
+    private int rechirps;
+
+    private boolean isDeleted = false;
+    private LocalDateTime deletedAt;
 
     private List<String> tagIds;
 

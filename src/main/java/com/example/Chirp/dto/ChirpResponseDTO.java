@@ -15,6 +15,12 @@ import java.util.List;
 public class ChirpResponseDTO {
     private String id;
     private String content;
+    private int likes;
+    private int replies;
+    private int rechirps;
+    private int views;
+    private int trendingScore;
+    private String rechirpedChirpId;
     private String parentChirpId;
     private String chirperId;
     private List<String> tagIds;

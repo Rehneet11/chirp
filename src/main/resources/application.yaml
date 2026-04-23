@@ -7,4 +7,10 @@ spring:
       port: 27017
       database: chirp
       auto-index-creation: true
-
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer :
+      group-id: view-count-consumer-2
+      auto-offset-reset: earliest
+  elasticsearch:
+    uris: http://localhost:9200
