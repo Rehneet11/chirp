@@ -3,6 +3,9 @@ package com.example.Chirp.controllers;
 import com.example.Chirp.dto.TagRequestDTO;
 import com.example.Chirp.dto.TagResponseDTO;
 import com.example.Chirp.services.ITagService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/tags")
+@Tag(name = "Tags", description = "Create and manage chirp tags")
 public class TagController {
     private final ITagService tagService;
 
@@ -18,7 +22,8 @@ public class TagController {
         this.tagService = tagService;
     }
     @PostMapping("/create_tag")
-    public Mono<TagResponseDTO> createTag(@RequestBody TagRequestDTO tagRequestDTO){
+    @Operation(summary = "Create a tag")
+    public Mono<TagResponseDTO> createTag(@Valid @RequestBody TagRequestDTO tagRequestDTO){
         return tagService.createTag(tagRequestDTO);
     }
 }
